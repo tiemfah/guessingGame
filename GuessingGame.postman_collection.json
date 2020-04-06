@@ -1,0 +1,354 @@
+{
+	"info": {
+		"_postman_id": "d16c929e-ba68-42b6-b377-9c44bca872fd",
+		"name": "GuessingGame",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create a sample stage",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4f019c12-0fa2-49aa-bd06-fc912ce4070e",
+						"exec": [
+							"function getRandomInt(max) {",
+							"  return Math.floor(Math.random() * Math.floor(max));",
+							"}",
+							"",
+							"try {",
+							"    ",
+							"    // retrieve the choices environment variable",
+							"    // remember to JSON.parse() choices because it's an array of objects",
+							"    let choiceArray = JSON.parse(pm.environment.get(\"choices\"));",
+							"    ",
+							"    // select a random place from the available choices",
+							"    let selectionIndex = getRandomInt(choiceArray.length);",
+							"    let selection = choiceArray[selectionIndex];",
+							"    let recommendation = \"Sivanat Subpaisarn 6110545643 You should try \" + selection.name + \" at \" + selection.vicinity + \" rated \" + selection.rating + \".\";",
+							"    console.log(recommendation);",
+							"    ",
+							"    // set the recommendation as an environment variable to be submitted via the main POST request",
+							"    pm.environment.set(\"recommendation\", recommendation);",
+							"}",
+							"catch (error) {",
+							"    throw error;",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ccd02ff3-789b-45ff-b4e6-df9ed6a587cc",
+						"exec": [
+							"pm.test(\"Direct Message sent successfully\", function () {",
+							"    pm.response.to.have.status(200);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth1",
+					"oauth1": [
+						{
+							"key": "consumerKey",
+							"value": "{{twitterConsumerKey}}",
+							"type": "string"
+						},
+						{
+							"key": "consumerSecret",
+							"value": "{{twitterConsumerSecret}}",
+							"type": "string"
+						},
+						{
+							"key": "token",
+							"value": "{{twitterAccessToken}}",
+							"type": "string"
+						},
+						{
+							"key": "tokenSecret",
+							"value": "{{twitterAccessTokenSecret}}",
+							"type": "string"
+						},
+						{
+							"key": "signatureMethod",
+							"value": "HMAC-SHA1",
+							"type": "string"
+						},
+						{
+							"key": "timestamp",
+							"type": "any"
+						},
+						{
+							"key": "nonce",
+							"type": "any"
+						},
+						{
+							"key": "version",
+							"value": "1.0",
+							"type": "string"
+						},
+						{
+							"key": "realm",
+							"type": "any"
+						},
+						{
+							"key": "addParamsToHeader",
+							"value": true,
+							"type": "boolean"
+						},
+						{
+							"key": "autoAddParam",
+							"type": "any"
+						},
+						{
+							"key": "addEmptyParamsToSign",
+							"value": true,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"combination\": [\"C\", \"A\", \"B\", \"D\"],\n    \"hint\": \"/Taxi/ D\",\n    \"author\": \"Sivanat Subpaisarn 6110545643\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/stage",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"stage"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Direct message to Twitter",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"event\": {\n    \"type\": \"message_create\",\n    \"message_create\": {\n      \"target\": {\n        \"recipient_id\": \"{{myTwitterId}}\"\n      },\n      \"message_data\": {\n        \"text\": \"{{recommendation}}\"\n      }\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "https://api.twitter.com/1.1/direct_messages/events/new.json",
+							"protocol": "https",
+							"host": [
+								"api",
+								"twitter",
+								"com"
+							],
+							"path": [
+								"1.1",
+								"direct_messages",
+								"events",
+								"new.json"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "cache-control",
+							"value": "no-cache, no-store, must-revalidate, pre-check=0, post-check=0",
+							"name": "cache-control",
+							"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+						},
+						{
+							"key": "content-disposition",
+							"value": "attachment; filename=json.json",
+							"name": "content-disposition",
+							"description": "An opportunity to raise a \"File Download\" dialogue box for a known MIME type"
+						},
+						{
+							"key": "content-encoding",
+							"value": "gzip",
+							"name": "content-encoding",
+							"description": "The type of encoding used on the data."
+						},
+						{
+							"key": "content-length",
+							"value": "260",
+							"name": "content-length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json;charset=utf-8",
+							"name": "content-type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "date",
+							"value": "Tue, 13 Mar 2018 00:52:42 GMT",
+							"name": "date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "expires",
+							"value": "Tue, 31 Mar 1981 05:00:00 GMT",
+							"name": "expires",
+							"description": "Gives the date/time after which the response is considered stale"
+						},
+						{
+							"key": "last-modified",
+							"value": "Tue, 13 Mar 2018 00:52:42 GMT",
+							"name": "last-modified",
+							"description": "The last modified date for the requested object, in RFC 2822 format"
+						},
+						{
+							"key": "pragma",
+							"value": "no-cache",
+							"name": "pragma",
+							"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+						},
+						{
+							"key": "server",
+							"value": "tsa_a",
+							"name": "server",
+							"description": "A name for the server"
+						},
+						{
+							"key": "status",
+							"value": "200 OK",
+							"name": "status",
+							"description": "Custom header"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=631138519",
+							"name": "strict-transport-security",
+							"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+						},
+						{
+							"key": "x-access-level",
+							"value": "read-write",
+							"name": "x-access-level",
+							"description": "Custom header"
+						},
+						{
+							"key": "x-connection-hash",
+							"value": "46a1108c9ee36283b77fe08b8a7357b7",
+							"name": "x-connection-hash",
+							"description": "Custom header"
+						},
+						{
+							"key": "x-content-type-options",
+							"value": "nosniff",
+							"name": "x-content-type-options",
+							"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+						},
+						{
+							"key": "x-frame-options",
+							"value": "SAMEORIGIN",
+							"name": "x-frame-options",
+							"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+						},
+						{
+							"key": "x-response-time",
+							"value": "74",
+							"name": "x-response-time",
+							"description": "Custom header"
+						},
+						{
+							"key": "x-transaction",
+							"value": "005a5d9500de46d5",
+							"name": "x-transaction",
+							"description": "Custom header"
+						},
+						{
+							"key": "x-tsa-request-body-time",
+							"value": "0",
+							"name": "x-tsa-request-body-time",
+							"description": "Custom header"
+						},
+						{
+							"key": "x-twitter-response-tags",
+							"value": "BouncerCompliant",
+							"name": "x-twitter-response-tags",
+							"description": "Custom header"
+						},
+						{
+							"key": "x-xss-protection",
+							"value": "1; mode=block; report=https://twitter.com/i/xss_report",
+							"name": "x-xss-protection",
+							"description": "Cross-site scripting (XSS) filter"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"httpOnly": true,
+							"domain": "twitter.com",
+							"path": "/",
+							"secure": true,
+							"value": "BAh7CSIKZmxhc2hJQzonQWN0aW9uQ29udHJvbGxlcjo6Rmxhc2g6OkZsYXNo%250ASGFzaHsABjoKQHVzZWR7ADoPY3JlYXRlZF9hdGwrCPWXzQFiAToMY3NyZl9p%250AZCIlMDg5ZWQ1MWQwN2Q0Mzc5Y2NiYmMwMjU3ODUwODFlODE6B2lkIiVmYTA1%250AMDliZjZkYjRhZTU1ZGM2ZGE5NGM0NjFjMmM5Mw%253D%253D--c8e4771180a8d49a632304c771986da32a3816ba",
+							"key": "_twitter_sess"
+						},
+						{
+							"expires": "Invalid Date",
+							"httpOnly": false,
+							"domain": "twitter.com",
+							"path": "/",
+							"secure": false,
+							"value": "\"v1_M7BWCaEbG7WDfrxwfCqRyg==\"",
+							"key": "personalization_id"
+						},
+						{
+							"expires": "Invalid Date",
+							"httpOnly": false,
+							"domain": "twitter.com",
+							"path": "/",
+							"secure": false,
+							"value": "v1%3A152044867377828252",
+							"key": "guest_id"
+						},
+						{
+							"expires": "Invalid Date",
+							"httpOnly": false,
+							"domain": "api.twitter.com",
+							"path": "/",
+							"secure": false,
+							"value": "en",
+							"key": "lang"
+						}
+					],
+					"body": "{\"event\":{\"type\":\"message_create\",\"id\":\"973361171934818308\",\"created_timestamp\":\"1520902362222\",\"message_create\":{\"target\":{\"recipient_id\":\"836103728\"},\"sender_id\":\"836103728\",\"message_data\":{\"text\":\"You should try Sushirrito - Union Square at 226 Kearny St, San Francisco rated 4.3.\",\"entities\":{\"hashtags\":[],\"symbols\":[],\"user_mentions\":[],\"urls\":[]}}}}}"
+				}
+			]
+		}
+	],
+	"protocolProfileBehavior": {}
+}
