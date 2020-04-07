@@ -19,7 +19,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
           <AddStageCard />
           {this.state.stages.map((stage) => {
             return StageCard(stage);

@@ -16,12 +16,13 @@ function AddStageCard(stage) {
     height: "100px",
     textAlign: "center",
     alignContent: "center",
+    backgroundColor: "grey"
   };
 
   const cardContent = {
     margin: "auto",
     paddingLeft: "17px",
-    color: "grey",
+    color: "white",
   };
 
   return (
