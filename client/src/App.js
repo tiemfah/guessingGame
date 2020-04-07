@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import StageCard from "./Component/Card";
+import AddStageCard from "./Component/AddCard";
 
 class App extends Component {
   state = {
@@ -18,17 +19,12 @@ class App extends Component {
   render() {
     return (
       <div>
-        <ul>
+        <div style={{ display: "flex" }}>
+          <AddStageCard />
           {this.state.stages.map((stage) => {
-            return (
-              <li key={stage._id}>
-                <Link to={`play/${stage._id}`}>
-                  <p>Stage: {stage._id}</p>
-                </Link>
-              </li>
-            );
+            return StageCard(stage);
           })}
-        </ul>
+        </div>
       </div>
     );
   }

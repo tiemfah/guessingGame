@@ -4,11 +4,13 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import PlayStage from "./PlayStage";
+import CreateStage from "./CreateStage";
 
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
       <Route path="/" exact component={App}></Route>
+      <Route path="/create" exact component={CreateStage}></Route>
       <Route path="/play/:stageId" component={PlayStage}></Route>
     </Switch>
   </BrowserRouter>,

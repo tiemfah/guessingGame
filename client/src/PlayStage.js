@@ -52,10 +52,10 @@ function PlayStage({ match }) {
       </ul>
       {/* controls */}
       <ul>
-        <li onClick={() => guessOne("A")}>A</li>
-        <li onClick={() => guessOne("B")}>B</li>
-        <li onClick={() => guessOne("C")}>C</li>
-        <li onClick={() => guessOne("D")}>D</li>
+        <button onClick={() => guessOne("A")}>A</button>
+        <button onClick={() => guessOne("B")}>B</button>
+        <button onClick={() => guessOne("C")}>C</button>
+        <button onClick={() => guessOne("D")}>D</button>
       </ul>
       <p>Number of unsuccessful try(s): {String(count)}</p>
     </div>
