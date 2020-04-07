@@ -10,7 +10,7 @@ class CreateStage extends Component {
       author: "",
       count: 0,
       isSent: false,
-      enableSubmit: false
+      enableSubmit: false,
     };
 
     // This binding is necessary to make `this` work in the callback
@@ -23,9 +23,9 @@ class CreateStage extends Component {
       count: this.state.count + 1,
     }));
     if (this.state.count >= 3) {
-        this.setState(() => ({
-            enableSubmit: true
-          }));
+      this.setState(() => ({
+        enableSubmit: true,
+      }));
     }
   }
 
@@ -49,7 +49,8 @@ class CreateStage extends Component {
     };
     fetch("http://localhost:3000/api/stage", requestOptions)
       .then((response) => response.json())
-      .then((data) => this.setState({ postId: data.id, isSent: true }));
+      .then((data) => this.setState({ postId: data.id }))
+      .then(() => this.props.history.push(`/play/${this.state.postId}`));
     e.preventDefault();
   };
 
@@ -88,9 +89,12 @@ class CreateStage extends Component {
           <button onClick={() => this.addToCombination("C")}>C</button>
           <button onClick={() => this.addToCombination("D")}>D</button>
         </ul>
-        <input type="submit" value="Submit" disabled={!this.state.enableSubmit} onClick={this.handleSubmit} />
-
-        <h1>{this.state.isSent ? "created": ""}</h1>
+        <input
+          type="submit"
+          value="Submit"
+          disabled={!this.state.enableSubmit}
+          onClick={this.handleSubmit}
+        />
       </div>
     );
   }
