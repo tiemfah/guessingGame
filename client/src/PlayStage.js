@@ -5,12 +5,12 @@ function PlayStage({ match }) {
     fetchStage();
   }, []);
 
-  const [stage, setStage] = useState({});
-  const [combination, setCombination] = useState({});
-  const [author, setAuthor] = useState({});
-  const [hint, setHint] = useState({});
-  const [count, setCount] = useState({});
-  const [stack, setStack] = useState({});
+  const [combination, setCombination] = useState([]);
+  const [author, setAuthor] = useState("");
+  const [hint, setHint] = useState("");
+  const [count, setCount] = useState(0);
+  const [stack, setStack] = useState(0);
+  const [isWon, setIsWon] = useState(false);
 
   const fetchStage = async () => {
     const fetchStage = await fetch(
@@ -20,8 +20,6 @@ function PlayStage({ match }) {
     setCombination(stage.data.combination);
     setAuthor(String(stage.data.author));
     setHint(String(stage.data.hint));
-    setStack(Number(0));
-    setCount(Number(0));
   };
 
   function guessOne(char) {
@@ -32,6 +30,9 @@ function PlayStage({ match }) {
       if (char === combination[stack]) {
         // correct one
         setStack(Number(stack + 1));
+        if (stack == 3) {
+          setIsWon(true);
+        }
       } else {
         // bad guess one
         setCount(Number(count + 1));
@@ -45,10 +46,18 @@ function PlayStage({ match }) {
       <p> by {String(author)}</p>
       {/* shown list */}
       <ul style={{ listStyleType: "none" }}>
-        <li style={{ display: "inline", padding: "2%" }}>{stack > 0 ? combination[0]: "_"}</li>
-        <li style={{ display: "inline", padding: "2%" }}>{stack > 1 ? combination[1]: "_"}</li>
-        <li style={{ display: "inline", padding: "2%" }}>{stack > 2 ? combination[2]: "_"}</li>
-        <li style={{ display: "inline", padding: "2%" }}>{stack > 3 ? combination[3]: "_"}</li>
+        <li style={{ display: "inline", padding: "2%" }}>
+          {stack > 0 ? combination[0] : "_"}
+        </li>
+        <li style={{ display: "inline", padding: "2%" }}>
+          {stack > 1 ? combination[1] : "_"}
+        </li>
+        <li style={{ display: "inline", padding: "2%" }}>
+          {stack > 2 ? combination[2] : "_"}
+        </li>
+        <li style={{ display: "inline", padding: "2%" }}>
+          {stack > 3 ? combination[3] : "_"}
+        </li>
       </ul>
       {/* controls */}
       <ul>
@@ -58,6 +67,11 @@ function PlayStage({ match }) {
         <button onClick={() => guessOne("D")}>D</button>
       </ul>
       <p>Number of unsuccessful try(s): {String(count)}</p>
+      <p style={{color: "green"}}>
+        {isWon
+          ? `You win ! \n Score: ${Math.ceil(Math.random() * 1000)} based purely on my criteria`
+          : ""}
+      </p>
     </div>
   );
 }
